@@ -10,11 +10,7 @@
     <h1>Record Page</h1>
     <video id="localVideo" autoplay muted></video>
     <script>
-        const peer = new Peer('esensahoobjfps5495c', { 
-            host: 'peerjs-server.herokuapp.com', 
-            port: 443, 
-            secure: true 
-        });
+        const peer = new Peer('record_esen_2360758');
 
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
             .then(stream => {
