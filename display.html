@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display</title>
+    <script src="https://cdn.peerjs.com/peerjs.min.js"></script>
+</head>
+<body>
+    <h1>Display Page</h1>
+    <video id="remoteVideo" autoplay></video>
+    <script>
+        const peer = new Peer('displayPeer', { 
+            host: 'peerjs-server.herokuapp.com', 
+            port: 443, 
+            secure: true 
+        });
+
+        peer.on('open', id => {
+            console.log('Peer ID:', id);
+        });
+
+        peer.on('connection', conn => {
+            console.log('Connected to:', conn.peer);
+        });
+
+        peer.on('call', call => {
+            console.log('Incoming call from:', call.peer);
+            call.answer(); // Answer the call without media initially
+
+            call.on('stream', stream => {
+                const remoteVideo = document.getElementById('remoteVideo');
+                remoteVideo.srcObject = stream;
+            });
+        });
+    </script>
+</body>
+</html>
