@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record</title>
+    <script src="https://cdn.peerjs.com/peerjs.min.js"></script>
+</head>
+<body>
+    <h1>Record Page</h1>
+    <video id="localVideo" autoplay muted></video>
+    <script>
+        const peer = new Peer('recordPeer', { 
+            host: 'peerjs-server.herokuapp.com', 
+            port: 443, 
+            secure: true 
+        });
+
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(stream => {
+                document.getElementById('localVideo').srcObject = stream;
+
+                peer.on('open', id => {
+                    console.log('Peer ID:', id);
+                });
+
+                peer.on('connection', conn => {
+                    console.log('Connected to:', conn.peer);
+                });
+
+                peer.on('call', call => {
+                    console.log('Incoming call from:', call.peer);
+                    call.answer(stream);
+                });
+            })
+            .catch(err => {
+                console.error('Failed to get media:', err);
+            });
+    </script>
+</body>
+</html>
